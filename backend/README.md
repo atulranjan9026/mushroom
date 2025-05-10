@@ -1,6 +1,42 @@
-# GGI Hi-Tech Farm Backend
+# RK Hi-Tech Farm Backend
 
-This is the backend server for the GGI Hi-Tech Farm e-commerce application.
+<!-- 
+  This is the main backend server for RK Hi-Tech Farm e-commerce application.
+  Start here to understand the API structure and setup the development environment.
+  
+  Quick Start: Run 'npm run start:all' in the backend directory to start both frontend and backend servers
+-->
+
+This is the backend server for RK Hi-Tech Farm e-commerce application, built with Node.js, Express, and MongoDB.
+
+## Dependencies
+
+### Authentication & Security
+- `bcryptjs`: Password hashing and verification
+- `jsonwebtoken`: JWT authentication implementation
+
+### Core Dependencies
+- `cors`: Cross-origin resource sharing middleware
+- `dotenv`: Environment variables management
+- `express`: Web framework for Node.js
+- `mongoose`: MongoDB object modeling tool
+- `morgan`: HTTP request logger middleware
+- `razorpay`: Payment gateway integration
+- `validator`: Input validation and sanitization
+
+### Development Dependencies
+- `nodemon`: Development server with auto-reload
+
+## Available Scripts
+
+- `npm start`: Runs the server in production mode
+- `npm run dev`: Runs the server in development mode with auto-reload
+- `npm run seed`: Seeds the database with initial data
+
+## Requirements
+
+- Node.js >= 14.0.0
+- MongoDB database
 
 ## Features
 

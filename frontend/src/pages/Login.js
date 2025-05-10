@@ -11,11 +11,14 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { loginUser } from '../store/slices/authSlice';
+import { useUserData } from '../hooks/useUserData';
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.auth);
+  const { isAdmin } = useUserData();
+  console.log("isAdmin",isAdmin);
 
   const [formData, setFormData] = useState({
     email: '',
@@ -30,7 +33,12 @@ const Login = () => {
     e.preventDefault();
     try {
       await dispatch(loginUser(formData)).unwrap();
-      navigate('/');
+      // Redirect based on user role
+      if (isAdmin) {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
     } catch (error) {
       console.error('Login failed:', error);
     }

@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../store/slices/authSlice';
+import { useUserData } from '../../hooks/useUserData';
 import {
   AppBar,
   Toolbar,
@@ -11,23 +12,46 @@ import {
   Box,
   IconButton,
   Badge,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import {
   ShoppingCart,
   Person,
   Dashboard,
   Logout,
+  AdminPanelSettings,
 } from '@mui/icons-material';
 
 const Layout = ({ children }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { isAuthenticated, user } = useSelector((state) => state.auth);
-  // console.log("fetchCurrentUser",fetchCurrentUser);
+  const { user, isAuthenticated, isAdmin } = useUserData();
   const { items } = useSelector((state) => state.cart);
+  const [adminMenuAnchor, setAdminMenuAnchor] = React.useState(null);
+  
+  console.log("user",user);
+
+  const handleAdminMenuOpen = (event) => {
+    setAdminMenuAnchor(event.currentTarget);
+  };
+
+  const handleAdminMenuClose = () => {
+    setAdminMenuAnchor(null);
+  };
+
+  const handleAdminNavigation = (path) => {
+    navigate(path);
+    handleAdminMenuClose();
+  };
+
   const handleLogout = () => {
     dispatch(logout());
-    navigate('/login');
+    if (isAdmin) {
+      navigate('/admin');
+    } else {
+      navigate('/');
+    }
   };
 
   return (
@@ -62,15 +86,7 @@ const Layout = ({ children }) => {
               <Typography variant="body1" sx={{ mx: 2 }}>
                 Welcome, {user?.name}
               </Typography>
-              {user?.role === 'admin' && (
-                <Button
-                  color="inherit"
-                  startIcon={<Dashboard />}
-                  onClick={() => navigate('/admin')}
-                >
-                  Admin
-                </Button>
-              )}
+              {!isAdmin && (
               <Button
                 color="inherit"
                 startIcon={<Person />}
@@ -78,6 +94,37 @@ const Layout = ({ children }) => {
               >
                 My Orders
               </Button>
+              )}
+              {isAdmin && (
+                <>
+                  <Button
+                    color="inherit"
+                    startIcon={<AdminPanelSettings />}
+                    onClick={handleAdminMenuOpen}
+                  >
+                    Admin
+                  </Button>
+                  <Menu
+                    anchorEl={adminMenuAnchor}
+                    open={Boolean(adminMenuAnchor)}
+                    onClose={handleAdminMenuClose}
+                  >
+                    <MenuItem onClick={() => handleAdminNavigation('/admin')}>
+                      Dashboard
+                    </MenuItem>
+                    <MenuItem onClick={() => handleAdminNavigation('/admin/products')}>
+                      Products
+                    </MenuItem>
+                    <MenuItem onClick={() => handleAdminNavigation('/admin/orders')}>
+                      Orders
+                    </MenuItem>
+                    <MenuItem onClick={() => handleAdminNavigation('/admin/users')}>
+                      Users
+                    </MenuItem>
+                  </Menu>
+                </>
+              )}
+              
               <Button
                 color="inherit"
                 startIcon={<Logout />}
